@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alibaba.coupon.module.dao.CouponMapper">
+    <resultMap id="BaseResultMap" type="com.alibaba.coupon.domain.entity.Coupon">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="template_id" jdbcType="INTEGER" property="templateId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="coupon_code" jdbcType="VARCHAR" property="couponCode"/>
+        <result column="assign_time" jdbcType="TIMESTAMP" property="assignTime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+    <insert id="insertUserGetCoupon">
+        <selectKey keyColumn="id" keyProperty="cp.id" order="AFTER" resultType="integer">
+            select last_insert_id() as id
+        </selectKey>
+        insert into coupon (template_id, user_id, coupon_code, assign_time, status)
+        value (#{cp.templateId}, #{cp.userId}, #{cp.couponCode}, #{cp.assignTime}, #{cp.status})
+    </insert>
+    <select id="findAllByUserIdAndStatus" resultMap="BaseResultMap">
+        select id, template_id, user_id, coupon_code, assign_time, status
+        from coupon
+        <where>
+            user_id = #{userId} and status = #{code}
+        </where>
+    </select>
+</mapper>

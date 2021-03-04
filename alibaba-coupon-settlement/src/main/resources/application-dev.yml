@@ -1,0 +1,19 @@
+server:
+  port: 7003
+#  servlet:
+#    context-path: /coupon-coupon
+
+spring:
+  application:
+    name: nacos-client-coupon-settlement
+
+  cloud:
+    nacos:
+      discovery:
+        # 指定nacos sercer的地址
+        server-addr: localhost:8848
+        cluster-name: BJ
+
+logging:
+  level:
+    com.alibaba.coupon: debug

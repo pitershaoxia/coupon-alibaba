@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alibaba.coupon.module.dao.CouponTemplateMapper">
+    <resultMap id="BaseResultMap" type="com.alibaba.coupon.domain.entity.CouponTemplate">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="available" jdbcType="BIT" property="available"/>
+        <result column="expired" jdbcType="BIT" property="expired"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="logo" jdbcType="VARCHAR" property="logo"/>
+        <result column="intro" jdbcType="VARCHAR" property="intro"/>
+        <result column="category" jdbcType="VARCHAR" property="category"/>
+        <result column="product_line" jdbcType="INTEGER" property="product_line"/>
+        <result column="coupon_count" jdbcType="INTEGER" property="count"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="template_key" jdbcType="VARCHAR" property="templateKey"/>
+        <result column="target" jdbcType="INTEGER" property="target"/>
+        <result column="rule" jdbcType="VARCHAR" property="rule"/>
+    </resultMap>
+
+    <insert id="insertTemplate">
+        <selectKey keyColumn="id" keyProperty="ct.id" order="AFTER" resultType="integer">
+            select last_insert_id() as id
+        </selectKey>
+        insert into coupon_template
+        (available, expired, `name`, logo, intro, category, product_line,
+        coupon_count, create_time, user_id, template_key, target, rule)
+        value (#{ct.available},#{ct.expired},#{ct.name},#{ct.logo},#{ct.intro},#{ct.category},
+        #{ct.product_line},#{ct.count},#{ct.createTime},#{ct.userId},
+        #{ct.templateKey},#{ct.target},#{ct.rule})
+    </insert>
+    <update id="updateAvailable">
+        update coupon_template set available = #{ct.available} where id = #{ct.id}
+    </update>
+    <update id="updateExpireTemplate">
+        update coupon_template set expired = #{template.expired}
+        <where>
+            id = #{template.id}
+        </where>
+    </update>
+
+    <select id="queryTemplateById" resultMap="BaseResultMap">
+        SELECT
+        id,available,expired,`name`,logo,intro,category,product_line,coupon_count,create_time,user_id,template_key,target,rule
+        FROM coupon_template
+        <where>
+            id = #{id}
+        </where>
+    </select>
+    <select id="findAllUsableTemplate" resultMap="BaseResultMap">
+        SELECT
+        id,available,expired,`name`,logo,intro,category,product_line,coupon_count,create_time,user_id,template_key,target,rule
+        FROM coupon_template
+        <where>
+            available = true and expired = false
+        </where>
+    </select>
+    <select id="findAllExpiredTemplate" resultMap="BaseResultMap">
+        SELECT
+        id,available,expired,`name`,logo,intro,category,product_line,coupon_count,create_time,user_id,template_key,target,rule
+        FROM coupon_template
+        <where>
+            expired = true
+        </where>
+    </select>
+
+</mapper>

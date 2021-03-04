@@ -1,0 +1,68 @@
+server:
+  port: 7002
+#  servlet:
+#    context-path: /coupon-distribution
+
+spring:
+  application:
+    name: nacos-client-coupon-distribution
+  datasource:
+    # 数据源
+    url: jdbc:mysql://127.0.0.1:3306/imooc_coupon_data?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 连接池
+    hikari:
+      maximum-pool-size: 8
+      minimum-idle: 4
+      idle-timeout: 30000
+      connection-timeout: 30000
+      max-lifetime: 45000
+      auto-commit: true
+      pool-name: ImoocCouponHikariCP
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        cluster-name: BJ
+
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    # password:
+    # 连接超时时间
+    timeout: 10000
+
+  kafka:
+    #    bootstrap-servers: 192.168.1.101:9092
+    bootstrap-servers: 192.168.0.129:9092
+    consumer:
+      group-id: imooc-coupon-x  # 如果程序中没有指定，则使用这个配置默认的
+      auto-offset-reset: latest
+
+
+logging:
+  level:
+    #    root: debug
+    com.imooc.coupon: info
+
+# feign 相关的配置
+feign:
+  sentinel:
+    enabled: true   # Hystrix 默认是关闭的  熔断机制
+  client: # 对于服务之间
+    config:
+      default:  # 全局的
+        connectTimeout: 2000  # 默认的连接超时时间是 10s
+        readTimeout: 5000
+      eureka-client-coupon-template:  # 单独服务的配置
+        connectTimeout: 3000  # 默认的连接超时时间是 10s
+        readTimeout: 5000
+# -------------------------------------------------------------------------------------------------
+# mybatis的类型转换器
+mybatis:
+  type-handlers-package: com.alibaba.coupon.domain.converter

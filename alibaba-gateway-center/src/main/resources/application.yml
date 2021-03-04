@@ -1,0 +1,35 @@
+server:
+  port: 8040
+spring:
+  application:
+    name: spring-coupon-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      discovery:
+        locator:
+          # 让gateway通过服务发现组件找到其他的微服务
+          enabled: true
+      routes:
+        - id: template_route
+          uri: lb://nacos-client-coupon-template
+          predicates:
+            - Path=//coupon-template/**
+#        - id: content_route
+#          uri: lb://content-center
+#          predicates:
+#            - Path=/shares/**,/admin/**
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
